@@ -1,0 +1,55 @@
+{
+  "name": "blacksentinel-command",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    
+    "docker:dev": "docker-compose up -d",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    
+    "deploy:docker": "./scripts/deploy.sh docker",
+    "deploy:k8s": "./scripts/deploy.sh kubernetes",
+    "deploy:aws": "./scripts/deploy.sh aws",
+    "deploy:azure": "./scripts/deploy.sh azure",
+    "deploy:gcp": "./scripts/deploy.sh gcp",
+    "deploy:on-premise": "./scripts/deploy.sh on-premise",
+    "deploy:status": "./scripts/deploy.sh status",
+    "deploy:cleanup": "./scripts/deploy.sh cleanup",
+    
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    
+    "generate:license": "ts-node scripts/generate-license.ts",
+    "validate:license": "ts-node scripts/validate-license.ts",
+    
+    "test:unit": "jest",
+    "test:integration": "jest --config jest.integration.config.js",
+    "test:e2e": "playwright test",
+    "test:coverage": "jest --coverage"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@10.0.0"
+}

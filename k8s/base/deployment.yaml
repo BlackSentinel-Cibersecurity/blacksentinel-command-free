@@ -1,0 +1,296 @@
+# ============================================================================
+# BlackSentinel Command - Kubernetes Base Configuration
+# ============================================================================
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blacksentinel
+  labels:
+    app.kubernetes.io/name: blacksentinel-command
+    app.kubernetes.io/part-of: blacksentinel
+
+---
+# ============================================================================
+# Deployment
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+  labels:
+    app: blacksentinel-command
+    version: v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blacksentinel-command
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: blacksentinel-command
+        version: v1
+    spec:
+      serviceAccountName: blacksentinel-command
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+        - name: blacksentinel-command
+          image: blacksentinel/command:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: redis-url
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: blacksentinel-secrets
+                  key: jwt-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      imagePullSecrets:
+        - name: blacksentinel-registry
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - blacksentinel-command
+                topologyKey: kubernetes.io/hostname
+
+---
+# ============================================================================
+# Service
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+  labels:
+    app: blacksentinel-command
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app: blacksentinel-command
+
+---
+# ============================================================================
+# Ingress
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+      more_set_headers "Permissions-Policy: camera=(), microphone=(), geolocation=()";
+      more_set_headers "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload";
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self';";
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - command.blacksentinel.io
+      secretName: blacksentinel-command-tls
+  rules:
+    - host: command.blacksentinel.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blacksentinel-command
+                port:
+                  number: 80
+
+---
+# ============================================================================
+# Horizontal Pod Autoscaler
+# ============================================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: blacksentinel-command
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# ============================================================================
+# Pod Disruption Budget
+# ============================================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: blacksentinel-command
+
+---
+# ============================================================================
+# Service Account
+# ============================================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+  labels:
+    app: blacksentinel-command
+
+---
+# ============================================================================
+# Network Policy
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: blacksentinel-command
+  namespace: blacksentinel
+spec:
+  podSelector:
+    matchLabels:
+      app: blacksentinel-command
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: blacksentinel
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+        - protocol: TCP
+          port: 7687
+        - protocol: TCP
+          port: 9200
+        - protocol: TCP
+          port: 9092
+
+---
+# ============================================================================
+# Secret (placeholder - use external secrets in production)
+# ============================================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: blacksentinel-secrets
+  namespace: blacksentinel
+type: Opaque
+data:
+  database-url: cG9zdGdyZXNxbDovL2JsYWNrc2VudGluZWw6YmxhY2tzZW50aW5lbEBwb3N0Z3Jlczp'
+  redis-url: cmVkaXM6Ly9yZWRpczoxMzc5
+  jwt-secret: eW91ci1qd3Qtc2VjcmV0LWtleS1jaGFuZ2UtaW4tcHJvZHVjdGlvbg==

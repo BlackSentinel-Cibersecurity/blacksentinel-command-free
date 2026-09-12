@@ -1,0 +1,21 @@
+{
+  "name": "@blacksentinel/ai-engine",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "langchain": "^0.1.0",
+    "@langchain/openai": "^0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
