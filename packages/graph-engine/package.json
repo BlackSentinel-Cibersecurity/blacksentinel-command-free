@@ -1,0 +1,29 @@
+{
+  "name": "@blacksentinel/graph-engine",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "reactflow": "^11.11.0",
+    "d3": "^7.9.0",
+    "d3-force": "^3.0.0",
+    "d3-hierarchy": "^3.1.0",
+    "d3-selection": "^3.0.0",
+    "d3-zoom": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/d3": "^7.4.0",
+    "@types/d3-force": "^3.0.0",
+    "@types/d3-hierarchy": "^3.1.0",
+    "@types/d3-selection": "^3.0.0",
+    "@types/d3-zoom": "^3.0.0"
+  }
+}
