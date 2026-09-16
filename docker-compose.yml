@@ -10,6 +10,7 @@ services:
   # Application
   # ============================================================================
   app:
+    image: ghcr.io/blacksentinel-cibersecurity/blacksentinel-command-free:main
     build:
       context: .
       dockerfile: Dockerfile
