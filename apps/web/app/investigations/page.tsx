@@ -502,7 +502,7 @@ export default function InvestigationsPage() {
                         <div className="flex items-center gap-3">
                           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-700">
                             <span className="text-xs font-medium text-white">
-                              {member.name.split(' ').map(n => n[0]).join('')}
+                              {member.name.split(' ').map((n: string) => n[0]).join('')}
                             </span>
                           </div>
                           <div>

@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
     "paths": {
       "@blacksentinel/ui/*": ["./packages/ui/*"],
       "@blacksentinel/ds/*": ["./packages/ds/*"],
@@ -24,6 +23,5 @@
       "@blacksentinel/ai-engine": ["./packages/ai-engine"]
     }
   },
-  "exclude": ["node_modules"],
-  "extends": "next"
+  "exclude": ["node_modules"]
 }

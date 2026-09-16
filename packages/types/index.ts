@@ -213,6 +213,24 @@ export interface Evidence {
 
 export type EvidenceType = 'log' | 'screenshot' | 'pcap' | 'file' | 'memory-dump' | 'disk-image' | 'network-capture';
 
+export interface TimelineEvent {
+  id: string;
+  timestamp: Date;
+  title: string;
+  description?: string;
+  actor?: string;
+  type?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface Note {
+  id: string;
+  content: string;
+  author: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
 // ============================================================================
 // Automation Types
 // ============================================================================

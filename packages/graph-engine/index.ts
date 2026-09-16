@@ -465,7 +465,7 @@ export function hierarchicalLayout(
         const targetId = typeof e.target === 'string' ? e.target : e.target.id;
         return nodes.find(n => n.id === targetId);
       })
-      .filter(Boolean);
+      .filter((n): n is GraphNode => n !== undefined);
   });
 
   const treeLayout = d3.tree().size([width, height - 100]);
