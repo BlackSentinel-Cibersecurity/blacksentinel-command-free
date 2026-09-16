@@ -3,7 +3,7 @@
 // Customizable colors and branding per tenant
 // ============================================================================
 
-import { TenantTier, TenantBranding } from '../types/tenant';
+import { TenantTier, TenantBranding } from '@blacksentinel/types/tenant';
 
 // ============================================================================
 // Default Theme (BlackSentinel Brand)

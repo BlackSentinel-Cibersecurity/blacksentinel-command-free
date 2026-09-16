@@ -9,7 +9,7 @@ import { DeploymentConfig, TenantTier, DeploymentMode } from '../types/tenant';
 // Base Configuration Templates
 // ============================================================================
 
-export const DEPLOYMENT_TEMPLATES: Record<DeploymentMode, Partial<DeploymentConfig>> = {
+export const DEPLOYMENT_TEMPLATES: Record<DeploymentMode, DeploymentConfig> = {
   'docker': {
     mode: 'docker',
     infrastructure: {
@@ -711,7 +711,6 @@ export function generateKubernetesManifests(tier: TenantTier, mode: DeploymentMo
           },
         },
       },
-      spec: {},
     },
     // Service
     {
@@ -733,7 +732,6 @@ export function generateKubernetesManifests(tier: TenantTier, mode: DeploymentMo
         ],
         type: 'ClusterIP',
       },
-      spec: {},
     },
     // Ingress
     {
@@ -776,7 +774,6 @@ export function generateKubernetesManifests(tier: TenantTier, mode: DeploymentMo
           },
         ],
       },
-      spec: {},
     },
   ];
 }

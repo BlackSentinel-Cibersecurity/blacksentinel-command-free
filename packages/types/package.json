@@ -5,7 +5,10 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./tenant": "./tenant.ts",
+    "./deployment": "./deployment.ts",
+    "./billing": "./billing.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

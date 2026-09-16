@@ -136,8 +136,7 @@ class LicenseGenerator {
     }
 
     // Verify signature
-    const dataToVerify = { ...license };
-    delete dataToVerify.signature;
+    const { signature: _signature, ...dataToVerify } = license;
 
     const verify = crypto.createVerify('SHA256');
     verify.update(JSON.stringify(dataToVerify));

@@ -11,7 +11,7 @@ export type TenantIsolation = 'shared' | 'dedicated' | 'isolated';
 
 export type BillingCycle = 'monthly' | 'annual' | 'custom';
 
-export type DeploymentMode = 'cloud' | 'on-premise' | 'hybrid' | 'air-gapped';
+export type DeploymentMode = 'docker' | 'kubernetes' | 'cloud' | 'on-premise' | 'hybrid' | 'air-gapped';
 
 export interface Tenant {
   id: string;
