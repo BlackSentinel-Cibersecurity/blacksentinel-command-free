@@ -1,11 +1,10 @@
-import type { NextConfig } from 'next';
-
 // ============================================================================
 // BlackSentinel Command - Next.js Production Configuration
 // Security-optimized configuration for enterprise deployment
 // ============================================================================
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // ============================================================================
   // Build Configuration
   // ============================================================================
@@ -161,8 +160,6 @@ const nextConfig: NextConfig = {
     },
     // Optimize CSS
     optimizeCss: true,
-    // Enable PPR (Partial Pre-Rendering)
-    ppr: true,
   },
 
   // ============================================================================
