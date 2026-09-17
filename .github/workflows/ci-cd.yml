@@ -97,6 +97,11 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: quality
+    env:
+      # GitHub Actions rejects the whole workflow file (job never even
+      # schedules) if `secrets` is referenced directly inside a step's
+      # `if:` — it has to be routed through a job-level env var first.
+      HAS_SNYK_TOKEN: ${{ secrets.SNYK_TOKEN != '' }}
 
     steps:
       - name: Checkout
@@ -110,7 +115,7 @@ jobs:
         # this condition instead makes the scan start actually gating the
         # moment the secret exists. npm audit and trufflehog below are
         # unaffected and always gate on real findings.
-        if: ${{ secrets.SNYK_TOKEN != '' }}
+        if: env.HAS_SNYK_TOKEN == 'true'
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
