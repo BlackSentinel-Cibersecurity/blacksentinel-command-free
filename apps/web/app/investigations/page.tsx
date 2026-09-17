@@ -129,6 +129,27 @@ export default function InvestigationsPage() {
   >(null);
   const [activeTab, setActiveTab] = React.useState('timeline');
 
+  // Math.random() can't run during render (React purity rule), so the
+  // simulated online/offline presence is computed in the click handler that
+  // selects an investigation (see `selectInvestigation` below), not here.
+  const [teamMembers, setTeamMembers] = React.useState<
+    Array<{ name: string; role: string; status: 'online' | 'offline' }>
+  >([]);
+
+  const selectInvestigation = (inv: (typeof investigations)[number]) => {
+    setSelectedInvestigation(inv);
+    setTeamMembers([
+      { name: inv.lead, role: 'Lead Investigator', status: 'online' },
+      ...inv.team
+        .filter((m: string) => m !== inv.lead)
+        .map((m: string) => ({
+          name: m,
+          role: 'Analyst',
+          status: (Math.random() > 0.5 ? 'online' : 'offline') as 'online' | 'offline',
+        })),
+    ]);
+  };
+
   const statusColors = {
     active: 'info',
     investigating: 'warning',
@@ -204,7 +225,7 @@ export default function InvestigationsPage() {
               key={inv.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              onClick={() => setSelectedInvestigation(inv)}
+              onClick={() => selectInvestigation(inv)}
               className={cn(
                 'cursor-pointer rounded-xl border p-4 transition-all',
                 selectedInvestigation?.id === inv.id
@@ -482,16 +503,7 @@ export default function InvestigationsPage() {
                         Add Member
                       </Button>
                     </div>
-                    {(
-                      [
-                        { name: selectedInvestigation.lead, role: 'Lead Investigator', status: 'online' },
-                        ...selectedInvestigation.team.filter((m: string) => m !== selectedInvestigation.lead).map((m: string) => ({
-                          name: m,
-                          role: 'Analyst',
-                          status: Math.random() > 0.5 ? 'online' : 'offline',
-                        })),
-                      ] as Array<{ name: string; role: string; status: 'online' | 'offline' }>
-                    ).map((member, i) => (
+                    {teamMembers.map((member, i) => (
                       <div
                         key={i}
                         className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/50 p-3"

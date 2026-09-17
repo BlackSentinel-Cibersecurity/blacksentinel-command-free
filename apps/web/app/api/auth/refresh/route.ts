@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
           organizationId: user.organizationId,
           action: 'SESSION_REFRESH',
           resource: 'auth',
-          ipAddress: request.ip || 'unknown',
+          ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
           userAgent: request.headers.get('user-agent') || '',
           success: true,
         });
