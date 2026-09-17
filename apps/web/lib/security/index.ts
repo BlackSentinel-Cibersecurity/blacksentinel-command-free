@@ -4,6 +4,7 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
+import sanitizeHtmlLib from 'sanitize-html';
 
 // ============================================================================
 // Input Sanitization
@@ -22,22 +23,20 @@ export function sanitizeInput(input: string): string {
     .trim();
 }
 
+const SANITIZE_HTML_OPTIONS: sanitizeHtmlLib.IOptions = {
+  allowedTags: ['p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'code', 'pre'],
+  allowedAttributes: {
+    a: ['href', 'target', 'rel'],
+  },
+  allowedSchemes: ['http', 'https', 'mailto'],
+  transformTags: {
+    a: sanitizeHtmlLib.simpleTransform('a', { rel: 'noopener noreferrer' }),
+  },
+};
+
 export function sanitizeHTML(html: string): string {
-  // Simple HTML sanitizer - in production use a library like DOMPurify
-  // (this only strips scripts/handlers/js: URLs; it does not enforce an
-  // allowed tag/attribute list)
-  let sanitized = html;
-
-  // Remove script tags
-  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-  // Remove event handlers
-  sanitized = sanitized.replace(/\son\w+\s*=/gi, ' ');
-
-  // Remove javascript: protocol
-  sanitized = sanitized.replace(/javascript:/gi, '');
-
-  return sanitized;
+  if (typeof html !== 'string') return '';
+  return sanitizeHtmlLib(html, SANITIZE_HTML_OPTIONS);
 }
 
 // ============================================================================
@@ -280,8 +279,17 @@ export function validateRequest(
     errors.push('Invalid origin');
   }
 
-  // Note: headers like x-forwarded-host / x-host / x-real-ip should only be
-  // trusted when they come from a known proxy; this is not yet enforced here.
+  // Note: x-forwarded-host / x-host / x-real-ip are not validated here.
+  // In this deployment (see config/nginx/nginx.conf), nginx always
+  // overwrites x-real-ip and x-forwarded-for before proxying to Next.js,
+  // so those two are already trustworthy by the time a request reaches
+  // this app. x-forwarded-host / x-host are NOT set by that nginx config,
+  // so a value in either could originate from the client unchanged. No
+  // route currently reads them (grep confirmed), so there's no live
+  // host-header-injection path today - but if a caller starts trusting
+  // them (e.g. to build absolute URLs or redirects), validate against an
+  // explicit allowlist of expected hostnames rather than the request's
+  // own headers.
 
   return {
     valid: errors.length === 0,
