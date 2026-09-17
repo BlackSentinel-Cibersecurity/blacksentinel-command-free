@@ -4,7 +4,6 @@
 // ============================================================================
 
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 // ============================================================================
@@ -68,7 +67,6 @@ const SESSION_MAX_AGE = 3600; // 1 hour
 const REFRESH_MAX_AGE = 604800; // 7 days
 const MFA_CHALLENGE_MAX_AGE = 300; // 5 minutes
 const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION = 900000; // 15 minutes
 
 // ============================================================================
 // Role-Based Access Control (RBAC)
@@ -258,7 +256,7 @@ export async function refreshSession(refreshToken: string): Promise<{ accessToke
   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 }
 
-export async function deleteSession(sessionIndex: string): Promise<void> {
+export async function deleteSession(_sessionIndex: string): Promise<void> {
   // In production: Delete session from Redis
   // await redis.del(`session:${sessionIndex}`);
 }
@@ -368,8 +366,8 @@ export async function createMFAChallenge(userId: string, method: MFAChallenge['m
 }
 
 export async function verifyMFAChallenge(
-  challengeId: string,
-  code: string
+  _challengeId: string,
+  _code: string
 ): Promise<{ verified: boolean; error?: string }> {
   // In production: Get challenge from Redis
   // const challengeData = await redis.get(`mfa:${challengeId}`);
@@ -447,7 +445,7 @@ export function validatePasswordStrength(password: string): {
 // Login Attempt Tracking
 // ============================================================================
 
-export async function checkLoginAttempts(email: string): Promise<{
+export async function checkLoginAttempts(_email: string): Promise<{
   allowed: boolean;
   attemptsRemaining: number;
   lockoutExpires?: Date;
@@ -467,7 +465,7 @@ export async function checkLoginAttempts(email: string): Promise<{
   return { allowed: true, attemptsRemaining: MAX_LOGIN_ATTEMPTS };
 }
 
-export async function recordLoginAttempt(email: string, success: boolean): Promise<void> {
+export async function recordLoginAttempt(_email: string, _success: boolean): Promise<void> {
   // In production: Record attempt in Redis
   // if (success) {
   //   await redis.del(`login_attempts:${email}`);
@@ -499,7 +497,7 @@ export interface AuditLog {
 }
 
 export async function logAuditEvent(event: Omit<AuditLog, 'timestamp'>): Promise<void> {
-  const auditEvent: AuditLog = {
+  const _auditEvent: AuditLog = {
     ...event,
     timestamp: new Date(),
   };

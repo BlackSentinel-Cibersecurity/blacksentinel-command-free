@@ -15,25 +15,14 @@ import {
   Bell,
   Palette,
   Globe,
-  Database,
   Lock,
-  Server,
-  Webhook,
   Plus,
   Search,
-  Filter,
-  Download,
-  RefreshCw,
   Edit3,
   Trash2,
-  Eye,
   CheckCircle,
-  XCircle,
-  AlertTriangle,
-  ChevronRight,
-  ExternalLink
+  XCircle
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export default function AdministrationPage() {
   const [activeTab, setActiveTab] = React.useState('general');
@@ -211,7 +200,7 @@ export default function AdministrationPage() {
                           <span className="text-xs text-gray-400">MFA</span>
                         </div>
                         <span className="text-xs text-gray-500">{user.lastLogin}</span>
-                        <StatusIndicator variant="badge" status={user.status as any} size="sm" />
+                        <StatusIndicator variant="badge" status={user.status === 'active' ? 'online' : 'offline'} size="sm" />
                         <div className="flex items-center gap-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7">
                             <Edit3 className="h-3 w-3" />
@@ -309,7 +298,7 @@ export default function AdministrationPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <StatusIndicator variant="badge" status={key.status as any} size="sm" />
+                        <StatusIndicator variant="badge" status={key.status === 'active' ? 'online' : 'offline'} size="sm" />
                         <Button variant="ghost" size="icon" className="h-8 w-8">
                           <Edit3 className="h-4 w-4" />
                         </Button>

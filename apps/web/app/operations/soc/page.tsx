@@ -5,36 +5,25 @@ import { cn } from '@blacksentinel/ds/utils/cn';
 import { MetricCard } from '@blacksentinel/ds/components/metric-card';
 import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
-import { StatusIndicator } from '@blacksentinel/ds/components/status-indicator';
 import { Button } from '@blacksentinel/ds/components/button';
-import { 
-  Shield, 
-  AlertTriangle, 
-  Target, 
-  Activity, 
-  Users, 
-  Server, 
+import {
+  AlertTriangle,
+  Target,
+  Users,
   Clock,
-  CheckCircle,
-  XCircle,
   Eye,
   Play,
-  Pause,
-  RotateCcw,
   Filter,
   Download,
   RefreshCw,
   Zap,
   Brain,
   Search,
-  ArrowUpRight,
   ExternalLink
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function SOCPage() {
-  const [selectedTab, setSelectedTab] = React.useState('alerts');
-
   const alerts = [
     {
       id: 'ALT-001',
@@ -103,14 +92,14 @@ export default function SOCPage() {
     High: 'warning',
     Medium: 'info',
     Low: 'default',
-  };
+  } as const;
 
   const statusColors = {
     Investigating: 'warning',
     Contained: 'info',
     Pending: 'default',
     Resolved: 'success',
-  };
+  } as const;
 
   return (
     <div className="space-y-6">
@@ -234,10 +223,10 @@ export default function SOCPage() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-mono text-gray-500">{alert.id}</span>
-                        <Badge variant={severityColors[alert.severity as keyof typeof severityColors] as any}>
+                        <Badge variant={severityColors[alert.severity as keyof typeof severityColors]}>
                           {alert.severity}
                         </Badge>
-                        <Badge variant={statusColors[alert.status as keyof typeof statusColors] as any}>
+                        <Badge variant={statusColors[alert.status as keyof typeof statusColors]}>
                           {alert.status}
                         </Badge>
                       </div>

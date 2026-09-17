@@ -2,30 +2,23 @@
 
 import * as React from 'react';
 import { cn } from '@blacksentinel/ds/utils/cn';
-import { 
-  LayoutDashboard, 
-  Shield, 
-  Activity, 
-  Globe, 
-  Server, 
+import {
+  LayoutDashboard,
+  Shield,
+  Activity,
+  Globe,
+  Server,
   Box,
   Search,
-  Clock,
-  FileText,
   Settings,
   Bell,
-  Users,
   Lock,
   ChevronDown,
-  ChevronRight,
   Menu,
   X,
-  Command,
   Target,
   Eye,
-  Database,
-  Key,
-  Cpu
+  Database
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

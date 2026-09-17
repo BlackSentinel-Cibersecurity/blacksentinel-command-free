@@ -6,16 +6,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/comp
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
 import {
-  Plus,
   Settings,
   Maximize2,
   Minimize2,
   RefreshCw,
-  Download,
   MoreVertical,
-  X,
   GripVertical,
-  Edit3,
   Copy,
   Trash2
 } from 'lucide-react';
@@ -76,7 +72,6 @@ export function Widget({
   onRefresh,
   onConfigure,
   onRemove,
-  onResize,
   children,
 }: WidgetProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -371,7 +366,6 @@ export function DashboardGrid({
   columns = 12,
   rowHeight = 100,
   isEditing = false,
-  onWidgetsChange,
   onWidgetRefresh,
   onWidgetConfigure,
   onWidgetRemove,
@@ -456,7 +450,7 @@ function WidgetContent({ type, config }: { type: WidgetType; config: WidgetConfi
   }
 }
 
-function MetricWidgetContent({ config }: { config: WidgetConfig }) {
+function MetricWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="flex h-full flex-col justify-center">
       <p className="text-3xl font-bold text-white">87</p>
@@ -469,7 +463,7 @@ function MetricWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function ChartWidgetContent({ config }: { config: WidgetConfig }) {
+function ChartWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="flex h-full items-center justify-center">
       <div className="text-center">
@@ -480,7 +474,7 @@ function ChartWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function TableWidgetContent({ config }: { config: WidgetConfig }) {
+function TableWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="space-y-2">
       {[
@@ -505,7 +499,7 @@ function TableWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function ListWidgetContent({ config }: { config: WidgetConfig }) {
+function ListWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="space-y-2">
       {['Critical: Ransomware detected', 'High: Brute force attempt', 'Medium: Certificate expiring'].map(
@@ -528,7 +522,7 @@ function ListWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function GraphWidgetContent({ config }: { config: WidgetConfig }) {
+function GraphWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="flex h-full items-center justify-center">
       <div className="text-center">
@@ -543,7 +537,7 @@ function GraphWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function TimelineWidgetContent({ config }: { config: WidgetConfig }) {
+function TimelineWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="space-y-3">
       {[
@@ -572,7 +566,7 @@ function TimelineWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function StatusWidgetContent({ config }: { config: WidgetConfig }) {
+function StatusWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="grid grid-cols-3 gap-2">
       {[
@@ -601,7 +595,7 @@ function StatusWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function ActivityWidgetContent({ config }: { config: WidgetConfig }) {
+function ActivityWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="space-y-2">
       {[
@@ -621,7 +615,7 @@ function ActivityWidgetContent({ config }: { config: WidgetConfig }) {
   );
 }
 
-function AIInsightsWidgetContent({ config }: { config: WidgetConfig }) {
+function AIInsightsWidgetContent({ config: _config }: { config: WidgetConfig }) {
   return (
     <div className="space-y-3">
       <div className="rounded-lg border border-orange-500/30 bg-orange-500/5 p-3">

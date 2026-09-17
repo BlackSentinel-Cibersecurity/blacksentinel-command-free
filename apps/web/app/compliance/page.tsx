@@ -3,10 +3,9 @@
 import * as React from 'react';
 import { cn } from '@blacksentinel/ds/utils/cn';
 import { MetricCard } from '@blacksentinel/ds/components/metric-card';
-import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
+import { Card, CardHeader, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
-import { StatusIndicator } from '@blacksentinel/ds/components/status-indicator';
 import {
   Shield,
   CheckCircle,
@@ -16,21 +15,13 @@ import {
   FileText,
   Download,
   RefreshCw,
-  Search,
-  Filter,
   ChevronDown,
   ChevronRight,
-  ExternalLink,
-  Eye,
-  Calendar,
-  Users,
-  Target,
-  Lock
+  Calendar
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function CompliancePage() {
-  const [selectedFramework, setSelectedFramework] = React.useState<any>(null);
   const [expandedCategory, setExpandedCategory] = React.useState<string | null>(null);
 
   const frameworks = [
@@ -215,12 +206,16 @@ export default function CompliancePage() {
     },
   ];
 
+  const [selectedFramework, setSelectedFramework] = React.useState<
+    (typeof frameworks)[number] | null
+  >(null);
+
   const statusColors = {
     compliant: 'success',
     partial: 'warning',
     'non-compliant': 'critical',
     'not-assessed': 'default',
-  };
+  } as const;
 
   const requirementStatusColors = {
     compliant: 'text-green-400 bg-green-500/10',
@@ -300,7 +295,7 @@ export default function CompliancePage() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm font-medium text-white">{framework.name}</h4>
-                    <Badge variant={statusColors[framework.status as keyof typeof statusColors] as any} dot>
+                    <Badge variant={statusColors[framework.status as keyof typeof statusColors]} dot>
                       {framework.status}
                     </Badge>
                   </div>
@@ -356,7 +351,7 @@ export default function CompliancePage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <h2 className="text-lg font-bold text-white">{selectedFramework.name}</h2>
-                      <Badge variant={statusColors[selectedFramework.status as keyof typeof statusColors] as any}>
+                      <Badge variant={statusColors[selectedFramework.status as keyof typeof statusColors]}>
                         {selectedFramework.status}
                       </Badge>
                     </div>
@@ -373,7 +368,7 @@ export default function CompliancePage() {
               <CardContent>
                 <div className="space-y-6">
                   {/* Categories */}
-                  {selectedFramework.categories.map((category: any) => (
+                  {selectedFramework.categories.map((category) => (
                     <div key={category.name} className="rounded-lg border border-gray-800 bg-gray-900/50">
                       <button
                         onClick={() => setExpandedCategory(expandedCategory === category.name ? null : category.name)}
@@ -402,7 +397,7 @@ export default function CompliancePage() {
                           className="border-t border-gray-800"
                         >
                           <div className="p-4 space-y-2">
-                            {category.requirements.map((req: any) => (
+                            {category.requirements.map((req) => (
                               <div
                                 key={req.id}
                                 className="flex items-center justify-between rounded-lg bg-gray-800/50 p-3"

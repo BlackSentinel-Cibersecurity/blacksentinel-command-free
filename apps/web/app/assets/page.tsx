@@ -5,38 +5,29 @@ import { cn } from '@blacksentinel/ds/utils/cn';
 import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
-import { Input } from '@blacksentinel/ds/components/input';
-import { 
-  Box, 
-  Search, 
-  Filter, 
-  Download, 
-  RefreshCw, 
-  ZoomIn, 
-  ZoomOut, 
+import {
+  Box,
+  Search,
+  Filter,
+  Download,
+  RefreshCw,
+  ZoomIn,
+  ZoomOut,
   Maximize2,
   Users,
   Server,
-  Globe,
-  Lock,
-  AlertTriangle,
   Shield,
   Database,
   Key,
   Cpu,
   Network,
-  Wifi,
-  HardDrive,
   Monitor,
   Smartphone,
   Cloud
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export default function AssetsPage() {
   const [viewMode, setViewMode] = React.useState<'graph' | 'list' | 'table'>('graph');
-  const [selectedNode, setSelectedNode] = React.useState<any>(null);
-
   const assetNodes = [
     { id: 'org', type: 'organization', label: 'Acme Corp', icon: <Shield className="h-6 w-6" />, count: 1, risk: 'medium' },
     { id: 'users', type: 'group', label: 'Users', icon: <Users className="h-5 w-5" />, count: 3456, risk: 'low' },
@@ -51,12 +42,23 @@ export default function AssetsPage() {
     { id: 'secrets', type: 'group', label: 'Secrets', icon: <Key className="h-5 w-5" />, count: 1247, risk: 'medium' },
   ];
 
+  const [selectedNode, setSelectedNode] = React.useState<
+    (typeof assetNodes)[number] | null
+  >(null);
+
   const riskColors = {
     low: 'text-green-400 bg-green-500/10 border-green-500/20',
     medium: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
     high: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
     critical: 'text-red-400 bg-red-500/10 border-red-500/20',
   };
+
+  const riskBadgeVariant = {
+    low: 'success',
+    medium: 'warning',
+    high: 'primary',
+    critical: 'critical',
+  } as const;
 
   return (
     <div className="space-y-6">
@@ -70,14 +72,16 @@ export default function AssetsPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
-            {[
-              { id: 'graph', label: 'Graph' },
-              { id: 'list', label: 'List' },
-              { id: 'table', label: 'Table' },
-            ].map((mode) => (
+            {(
+              [
+                { id: 'graph', label: 'Graph' },
+                { id: 'list', label: 'List' },
+                { id: 'table', label: 'Table' },
+              ] as const
+            ).map((mode) => (
               <button
                 key={mode.id}
-                onClick={() => setViewMode(mode.id as any)}
+                onClick={() => setViewMode(mode.id)}
                 className={cn(
                   'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
                   viewMode === mode.id
@@ -253,7 +257,7 @@ export default function AssetsPage() {
                         <p className="text-xs text-gray-400">{node.count.toLocaleString()} assets</p>
                       </div>
                     </div>
-                    <Badge variant={node.risk as any} size="sm">
+                    <Badge variant={riskBadgeVariant[node.risk as keyof typeof riskBadgeVariant]} size="sm">
                       {node.risk}
                     </Badge>
                   </div>
@@ -268,7 +272,7 @@ export default function AssetsPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>{selectedNode.label}</CardTitle>
-                  <Badge variant={selectedNode.risk as any}>
+                  <Badge variant={riskBadgeVariant[selectedNode.risk as keyof typeof riskBadgeVariant]}>
                     {selectedNode.risk}
                   </Badge>
                 </div>

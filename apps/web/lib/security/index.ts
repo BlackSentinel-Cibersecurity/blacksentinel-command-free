@@ -23,12 +23,9 @@ export function sanitizeInput(input: string): string {
 }
 
 export function sanitizeHTML(html: string): string {
-  const allowedTags = [
-    'p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'code', 'pre',
-  ];
-  const allowedAttributes = ['href', 'target', 'rel'];
-
   // Simple HTML sanitizer - in production use a library like DOMPurify
+  // (this only strips scripts/handlers/js: URLs; it does not enforce an
+  // allowed tag/attribute list)
   let sanitized = html;
 
   // Remove script tags
@@ -100,7 +97,7 @@ export function generateCSRFToken(): string {
   return crypto.randomUUID();
 }
 
-export function validateCSRFToken(token: string, sessionToken: string): boolean {
+export function validateCSRFToken(_token: string, _sessionToken: string): boolean {
   // In production: Validate against stored token
   // The CSRF token should be derived from the session token
   // using a HMAC function
@@ -216,7 +213,7 @@ export function isIPBlocked(ip: string): boolean {
   return blockedIPs.has(ip);
 }
 
-export function blockIP(ip: string, reason: string): void {
+export function blockIP(ip: string, _reason: string): void {
   blockedIPs.add(ip);
   // In production: Store in database and Redis
   // Also send alert to security team
@@ -283,14 +280,8 @@ export function validateRequest(
     errors.push('Invalid origin');
   }
 
-  // Check for common attack headers
-  const suspiciousHeaders = [
-    'x-forwarded-host',
-    'x-host',
-    'x-real-ip',
-  ];
-
-  // These headers should only be present from trusted proxies
+  // Note: headers like x-forwarded-host / x-host / x-real-ip should only be
+  // trusted when they come from a known proxy; this is not yet enforced here.
 
   return {
     valid: errors.length === 0,
@@ -356,21 +347,23 @@ export async function decryptData(encryptedData: string): Promise<string> {
 // API Key Management
 // ============================================================================
 
-export function generateAPIKey(): { key: string; hash: string } {
+export async function generateAPIKey(): Promise<{ key: string; hash: string }> {
   const key = `bs_${crypto.randomUUID().replace(/-/g, '')}`;
-  const hash = hashAPIKey(key);
+  const hash = await hashAPIKey(key);
   return { key, hash };
 }
 
-export function hashAPIKey(key: string): string {
+export async function hashAPIKey(key: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(key);
-  // Use SHA-256 for API key hashing
-  return crypto.randomUUID(); // Placeholder - use proper hashing in production
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
-export function validateAPIKey(key: string, hash: string): boolean {
-  return hashAPIKey(key) === hash;
+export async function validateAPIKey(key: string, hash: string): Promise<boolean> {
+  return (await hashAPIKey(key)) === hash;
 }
 
 // ============================================================================
@@ -467,7 +460,7 @@ export interface SecurityEvent {
 }
 
 export async function logSecurityEvent(event: Omit<SecurityEvent, 'timestamp'>): Promise<void> {
-  const securityEvent: SecurityEvent = {
+  const _securityEvent: SecurityEvent = {
     ...event,
     timestamp: new Date(),
   };
@@ -477,7 +470,7 @@ export async function logSecurityEvent(event: Omit<SecurityEvent, 'timestamp'>):
 
   if (event.severity === 'critical') {
     // Send immediate alert
-    // await sendSecurityAlert(securityEvent);
+    // await sendSecurityAlert(_securityEvent);
   }
 }
 

@@ -126,7 +126,7 @@ export function createPaginatedResponse<T>(
 
 export function createSuccessResponse<T>(
   data: T,
-  statusCode: number = 200
+  _statusCode: number = 200
 ): ApiResponse<T> {
   return {
     success: true,
@@ -142,7 +142,7 @@ export function createSuccessResponse<T>(
 export function createErrorResponse(
   code: string,
   message: string,
-  statusCode: number = 400,
+  _statusCode: number = 400,
   details?: Record<string, unknown>
 ): ApiResponse {
   return {

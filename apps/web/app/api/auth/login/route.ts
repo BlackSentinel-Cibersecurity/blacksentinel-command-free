@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import {
   createSession,
   verifyPassword,
@@ -6,7 +6,7 @@ import {
   recordLoginAttempt,
   logAuditEvent,
   setSessionCookies,
-  validatePasswordStrength,
+  hashPassword,
 } from '@/lib/auth';
 import { sanitizeInput, checkRateLimit, createSecureResponse, createErrorResponse } from '@/lib/security';
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       id: 'user-1',
       email: sanitizedEmail,
       name: 'John Doe',
-      passwordHash: await require('@/lib/auth').hashPassword('SecureP@ssw0rd!'),
+      passwordHash: await hashPassword('SecureP@ssw0rd!'),
       role: 'ciso' as const,
       organizationId: 'org-1',
       mfaEnabled: true,

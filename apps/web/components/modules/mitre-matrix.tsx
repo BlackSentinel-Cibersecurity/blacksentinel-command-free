@@ -5,12 +5,8 @@ import { cn } from '@blacksentinel/ds/utils/cn';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
 import {
-  Shield,
-  AlertTriangle,
   Eye,
-  Info,
   ExternalLink,
-  Filter,
   Download
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -230,6 +226,14 @@ export function MITREMatrix({
     }
   };
 
+  const riskBadgeVariant = {
+    critical: 'critical',
+    high: 'primary',
+    medium: 'warning',
+    low: 'success',
+    none: 'default',
+  } as const;
+
   const getDetectionCount = (techniqueId: string) => {
     return detections[techniqueId] || 0;
   };
@@ -250,10 +254,10 @@ export function MITREMatrix({
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
-            {['all', 'detected', 'alerted', 'risk'].map((f) => (
+            {(['all', 'detected', 'alerted', 'risk'] as const).map((f) => (
               <button
                 key={f}
-                onClick={() => setFilter(f as any)}
+                onClick={() => setFilter(f)}
                 className={cn(
                   'rounded-md px-2 py-1 text-[10px] font-medium capitalize transition-colors',
                   filter === f
@@ -375,7 +379,7 @@ export function MITREMatrix({
                     <h4 className="text-sm font-bold text-white">{technique.name}</h4>
                     <p className="text-xs text-gray-500">{technique.id}</p>
                   </div>
-                  <Badge variant={technique.risk as any}>
+                  <Badge variant={riskBadgeVariant[technique.risk]}>
                     {technique.risk}
                   </Badge>
                 </div>
