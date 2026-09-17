@@ -6,24 +6,16 @@ import { MetricCard } from '@blacksentinel/ds/components/metric-card';
 import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { StatusIndicator } from '@blacksentinel/ds/components/status-indicator';
-import { 
-  Shield, 
-  AlertTriangle, 
-  Target, 
-  Activity, 
-  Users, 
-  Server, 
-  Globe, 
-  Lock, 
-  Zap, 
-  TrendingUp, 
-  TrendingDown,
-  Brain,
-  Clock,
-  CheckCircle,
-  XCircle,
-  ArrowUpRight,
-  ArrowDownRight
+import {
+  Shield,
+  AlertTriangle,
+  Target,
+  Users,
+  Server,
+  Globe,
+  Lock,
+  Zap,
+  Brain
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -57,7 +49,7 @@ export default function DashboardPage() {
               <Badge variant="success" dot>+3 this week</Badge>
             </div>
             <p className="text-sm text-gray-400">
-              Your organization's security posture is <span className="font-medium text-green-400">Strong</span>
+              Your organization&apos;s security posture is <span className="font-medium text-green-400">Strong</span>
             </p>
           </div>
           <div className="relative h-32 w-32">
@@ -338,19 +330,21 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
-              {[
-                { name: 'Cloud Servers', count: 142, status: 'online', health: 99.9 },
-                { name: 'Containers', count: 1247, status: 'online', health: 99.7 },
-                { name: 'Endpoints', count: 3456, status: 'online', health: 98.5 },
-                { name: 'Network Devices', count: 89, status: 'online', health: 99.8 },
-              ].map((item) => (
+              {(
+                [
+                  { name: 'Cloud Servers', count: 142, status: 'online', health: 99.9 },
+                  { name: 'Containers', count: 1247, status: 'online', health: 99.7 },
+                  { name: 'Endpoints', count: 3456, status: 'online', health: 98.5 },
+                  { name: 'Network Devices', count: 89, status: 'online', health: 99.8 },
+                ] as const
+              ).map((item) => (
                 <div
                   key={item.name}
                   className="rounded-lg border border-gray-800 bg-gray-900/50 p-4"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-400">{item.name}</span>
-                    <StatusIndicator variant="dot" status={item.status as any} size="sm" />
+                    <StatusIndicator variant="dot" status={item.status} size="sm" />
                   </div>
                   <p className="mt-2 text-2xl font-bold text-white">{item.count.toLocaleString()}</p>
                   <p className="text-xs text-gray-500">{item.health}% uptime</p>

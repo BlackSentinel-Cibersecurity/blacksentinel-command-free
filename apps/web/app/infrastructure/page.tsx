@@ -7,16 +7,15 @@ import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/comp
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
 import { StatusIndicator } from '@blacksentinel/ds/components/status-indicator';
-import { 
-  Server, 
-  Cloud, 
-  Box, 
-  Network, 
-  Shield, 
-  Activity, 
-  Cpu, 
-  HardDrive, 
-  Wifi,
+import {
+  Server,
+  Cloud,
+  Box,
+  Network,
+  Shield,
+  Activity,
+  Cpu,
+  HardDrive,
   Globe,
   Database,
   Lock,
@@ -25,7 +24,6 @@ import {
   Download,
   Settings,
   AlertTriangle,
-  CheckCircle,
   Clock
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -51,12 +49,19 @@ export default function InfrastructurePage() {
     { severity: 'low', title: 'Disk space below 20% on storage-01', time: '3 hours ago', affected: ['File Server', 'Storage'] },
   ];
 
-  const statusColors = {
-    healthy: 'success',
+  const nodeStatusIndicator = {
+    healthy: 'online',
     warning: 'warning',
     critical: 'critical',
-    offline: 'default',
-  };
+    offline: 'offline',
+  } as const;
+
+  const severityBadgeVariant = {
+    low: 'success',
+    medium: 'warning',
+    high: 'primary',
+    critical: 'critical',
+  } as const;
 
   return (
     <div className="space-y-6">
@@ -122,10 +127,10 @@ export default function InfrastructurePage() {
             <div className="flex items-center justify-between">
               <CardTitle>Infrastructure Overview</CardTitle>
               <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
-                {['overview', 'map', 'list'].map((mode) => (
+                {(['overview', 'map', 'list'] as const).map((mode) => (
                   <button
                     key={mode}
-                    onClick={() => setViewMode(mode as any)}
+                    onClick={() => setViewMode(mode)}
                     className={cn(
                       'rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors',
                       viewMode === mode
@@ -164,7 +169,7 @@ export default function InfrastructurePage() {
                     </div>
                     <StatusIndicator
                       variant="badge"
-                      status={item.status as any}
+                      status={nodeStatusIndicator[item.status as keyof typeof nodeStatusIndicator]}
                       size="sm"
                     />
                   </div>
@@ -195,7 +200,7 @@ export default function InfrastructurePage() {
                     className="rounded-lg border border-gray-800 bg-gray-900/50 p-3"
                   >
                     <div className="flex items-center gap-2">
-                      <Badge variant={issue.severity as any} size="sm">
+                      <Badge variant={severityBadgeVariant[issue.severity as keyof typeof severityBadgeVariant]} size="sm">
                         {issue.severity}
                       </Badge>
                       <span className="text-[10px] text-gray-500">{issue.time}</span>
@@ -270,7 +275,7 @@ export default function InfrastructurePage() {
                         <p className="text-xs text-gray-400">{provider.resources} resources</p>
                       </div>
                     </div>
-                    <StatusIndicator variant="badge" status={provider.status as any} size="sm" />
+                    <StatusIndicator variant="badge" status={nodeStatusIndicator[provider.status as keyof typeof nodeStatusIndicator]} size="sm" />
                   </div>
                 ))}
               </div>

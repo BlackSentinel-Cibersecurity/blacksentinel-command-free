@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { refreshSession, logAuditEvent, getSessionFromRequest } from '@/lib/auth';
 import { setSessionCookies, clearSessionCookies } from '@/lib/auth';
 import { createSecureResponse, createErrorResponse } from '@/lib/security';

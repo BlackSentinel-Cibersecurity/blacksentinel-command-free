@@ -2,7 +2,6 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 import { Card } from '../card';
-import { Badge } from '../badge';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const metricCardVariants = cva('', {

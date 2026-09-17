@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@blacksentinel/ds/utils/cn';
 import { Sidebar } from './sidebar';
 import { Header } from './header';
 import { motion } from 'framer-motion';

@@ -9,30 +9,30 @@ import { StatusIndicator } from '@blacksentinel/ds/components/status-indicator';
 import {
   Box,
   Server,
-  Globe,
   Network,
   Database,
   Cloud,
   Shield,
-  Lock,
   Activity,
   RefreshCw,
-  Download,
   Maximize2,
-  Minimize2,
-  Eye,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Cpu,
-  HardDrive,
-  Wifi,
-  Monitor
+  Eye
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const nodeStatusIndicator = {
+  healthy: 'online',
+  warning: 'warning',
+  critical: 'critical',
+} as const;
+
+const riskBadgeVariant = {
+  low: 'success',
+  medium: 'warning',
+  critical: 'critical',
+} as const;
+
 export default function DigitalTwinPage() {
-  const [selectedNode, setSelectedNode] = React.useState<any>(null);
   const [viewMode, setViewMode] = React.useState<'topology' | 'dependencies' | 'risks'>('topology');
 
   const infrastructureNodes = [
@@ -102,6 +102,10 @@ export default function DigitalTwinPage() {
     },
   ];
 
+  const [selectedNode, setSelectedNode] = React.useState<
+    (typeof infrastructureNodes)[number] | null
+  >(null);
+
   const dependencies = [
     { source: 'cloud-aws', target: 'k8s-cluster', type: 'hosts', status: 'healthy' },
     { source: 'k8s-cluster', target: 'db-cluster', type: 'connects_to', status: 'critical' },
@@ -137,10 +141,10 @@ export default function DigitalTwinPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
-            {['topology', 'dependencies', 'risks'].map((mode) => (
+            {(['topology', 'dependencies', 'risks'] as const).map((mode) => (
               <button
                 key={mode}
-                onClick={() => setViewMode(mode as any)}
+                onClick={() => setViewMode(mode)}
                 className={cn(
                   'rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors',
                   viewMode === mode
@@ -307,7 +311,7 @@ export default function DigitalTwinPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>{selectedNode.name}</CardTitle>
-                  <StatusIndicator variant="badge" status={selectedNode.status as any} size="sm" />
+                  <StatusIndicator variant="badge" status={nodeStatusIndicator[selectedNode.status as keyof typeof nodeStatusIndicator]} size="sm" />
                 </div>
               </CardHeader>
               <CardContent>
@@ -319,7 +323,7 @@ export default function DigitalTwinPage() {
                     </div>
                     <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-3">
                       <p className="text-xs text-gray-400">Risk Level</p>
-                      <Badge variant={selectedNode.risk as any} className="mt-1">
+                      <Badge variant={riskBadgeVariant[selectedNode.risk as keyof typeof riskBadgeVariant]} className="mt-1">
                         {selectedNode.risk}
                       </Badge>
                     </div>
@@ -332,7 +336,7 @@ export default function DigitalTwinPage() {
                     <div>
                       <p className="mb-2 text-xs font-medium text-gray-400">Child Components</p>
                       <div className="space-y-2">
-                        {selectedNode.children.map((child: any) => (
+                        {selectedNode.children.map((child) => (
                           <div
                             key={child.id}
                             className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/50 p-2"
@@ -341,7 +345,7 @@ export default function DigitalTwinPage() {
                               {typeIcons[child.type] || <Box className="h-4 w-4" />}
                               <span className="text-xs text-white">{child.name}</span>
                             </div>
-                            <StatusIndicator variant="dot" status={child.status as any} size="sm" />
+                            <StatusIndicator variant="dot" status={nodeStatusIndicator[child.status as keyof typeof nodeStatusIndicator]} size="sm" />
                           </div>
                         ))}
                       </div>

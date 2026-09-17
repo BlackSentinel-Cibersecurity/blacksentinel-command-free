@@ -2,30 +2,16 @@
 
 import * as React from 'react';
 import { cn } from '@blacksentinel/ds/utils/cn';
-import { 
-  Search, 
-  Bell, 
-  Settings, 
-  Moon, 
-  Sun, 
-  Maximize2, 
-  Minimize2,
-  Command,
+import {
+  Search,
+  Bell,
+  Settings,
+  Moon,
+  Sun,
   ChevronDown,
-  Globe,
-  Shield,
-  Activity,
-  Box,
-  Zap,
-  Lock,
-  BarChart3,
-  Brain,
   Clock,
-  Users,
-  FileText,
   AlertTriangle,
-  CheckCircle,
-  Info
+  CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

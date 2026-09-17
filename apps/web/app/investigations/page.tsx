@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@blacksentinel/ds/utils/cn';
-import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
+import { Card, CardHeader, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
 import { Input } from '@blacksentinel/ds/components/input';
@@ -12,21 +12,14 @@ import {
   Plus,
   Filter,
   Download,
-  RefreshCw,
   Clock,
-  Users,
-  FileText,
   Link2,
-  MessageSquare,
   Paperclip,
   ExternalLink,
   Eye,
   Edit3,
-  Trash2,
-  GitBranch,
   AlertTriangle,
   Shield,
-  Target,
   Globe,
   Lock,
   Server,
@@ -35,9 +28,6 @@ import {
 import { motion } from 'framer-motion';
 
 export default function InvestigationsPage() {
-  const [selectedInvestigation, setSelectedInvestigation] = React.useState<any>(null);
-  const [activeTab, setActiveTab] = React.useState('timeline');
-
   const investigations = [
     {
       id: 'INV-2024-001',
@@ -134,13 +124,18 @@ export default function InvestigationsPage() {
     },
   ];
 
+  const [selectedInvestigation, setSelectedInvestigation] = React.useState<
+    (typeof investigations)[number] | null
+  >(null);
+  const [activeTab, setActiveTab] = React.useState('timeline');
+
   const statusColors = {
     active: 'info',
     investigating: 'warning',
     pending: 'default',
     resolved: 'success',
     closed: 'default',
-  };
+  } as const;
 
   const typeIcons: Record<string, React.ReactNode> = {
     detection: <Eye className="h-3 w-3" />,
@@ -221,7 +216,7 @@ export default function InvestigationsPage() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono text-gray-500">{inv.id}</span>
-                    <Badge variant={statusColors[inv.status as keyof typeof statusColors] as any} dot>
+                    <Badge variant={statusColors[inv.status as keyof typeof statusColors]} dot>
                       {inv.status}
                     </Badge>
                   </div>
@@ -273,7 +268,7 @@ export default function InvestigationsPage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono text-gray-500">{selectedInvestigation.id}</span>
-                      <Badge variant={statusColors[selectedInvestigation.status as keyof typeof statusColors] as any}>
+                      <Badge variant={statusColors[selectedInvestigation.status as keyof typeof statusColors]}>
                         {selectedInvestigation.status}
                       </Badge>
                       <Badge variant={selectedInvestigation.severity === 'critical' ? 'critical' : selectedInvestigation.severity === 'high' ? 'warning' : 'info'}>
@@ -316,7 +311,7 @@ export default function InvestigationsPage() {
                 {activeTab === 'timeline' && (
                   <div className="space-y-4">
                     {selectedInvestigation.timelineEvents.length > 0 ? (
-                      selectedInvestigation.timelineEvents.map((event: any, index: number) => (
+                      selectedInvestigation.timelineEvents.map((event, index) => (
                         <motion.div
                           key={index}
                           initial={{ opacity: 0, x: -20 }}
@@ -398,7 +393,7 @@ export default function InvestigationsPage() {
                 {activeTab === 'iocs' && (
                   <div className="space-y-3">
                     {selectedInvestigation.iocs.length > 0 ? (
-                      selectedInvestigation.iocs.map((ioc: any, index: number) => (
+                      selectedInvestigation.iocs.map((ioc, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/50 p-3"
@@ -487,14 +482,16 @@ export default function InvestigationsPage() {
                         Add Member
                       </Button>
                     </div>
-                    {[
-                      { name: selectedInvestigation.lead, role: 'Lead Investigator', status: 'online' },
-                      ...selectedInvestigation.team.filter((m: string) => m !== selectedInvestigation.lead).map((m: string) => ({
-                        name: m,
-                        role: 'Analyst',
-                        status: Math.random() > 0.5 ? 'online' : 'offline',
-                      })),
-                    ].map((member, i) => (
+                    {(
+                      [
+                        { name: selectedInvestigation.lead, role: 'Lead Investigator', status: 'online' },
+                        ...selectedInvestigation.team.filter((m: string) => m !== selectedInvestigation.lead).map((m: string) => ({
+                          name: m,
+                          role: 'Analyst',
+                          status: Math.random() > 0.5 ? 'online' : 'offline',
+                        })),
+                      ] as Array<{ name: string; role: string; status: 'online' | 'offline' }>
+                    ).map((member, i) => (
                       <div
                         key={i}
                         className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/50 p-3"
@@ -510,7 +507,7 @@ export default function InvestigationsPage() {
                             <p className="text-xs text-gray-400">{member.role}</p>
                           </div>
                         </div>
-                        <StatusIndicator variant="dot" status={member.status as any} size="sm" />
+                        <StatusIndicator variant="dot" status={member.status} size="sm" />
                       </div>
                     ))}
                   </div>

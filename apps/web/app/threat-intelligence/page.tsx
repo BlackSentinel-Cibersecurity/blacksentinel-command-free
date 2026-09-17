@@ -6,11 +6,10 @@ import { MetricCard } from '@blacksentinel/ds/components/metric-card';
 import { Card, CardHeader, CardTitle, CardContent } from '@blacksentinel/ds/components/card';
 import { Badge } from '@blacksentinel/ds/components/badge';
 import { Button } from '@blacksentinel/ds/components/button';
-import { 
-  Globe, 
-  Target, 
-  Lock, 
-  AlertTriangle, 
+import {
+  Globe,
+  Target,
+  Lock,
   Eye,
   Search,
   Filter,
@@ -18,9 +17,6 @@ import {
   RefreshCw,
   ExternalLink,
   Shield,
-  Users,
-  Server,
-  Clock,
   TrendingUp,
   TrendingDown,
   Map
@@ -105,13 +101,13 @@ export default function ThreatIntelligencePage() {
     High: 'warning',
     Medium: 'info',
     Low: 'default',
-  };
+  } as const;
 
   const statusColors = {
     Active: 'critical',
     Monitoring: 'warning',
     Contained: 'success',
-  };
+  } as const;
 
   return (
     <div className="space-y-6">
@@ -324,7 +320,7 @@ export default function ThreatIntelligencePage() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <h4 className="text-sm font-medium text-white">{actor.name}</h4>
-                        <Badge variant={statusColors[actor.activity as keyof typeof statusColors] as any} dot>
+                        <Badge variant={statusColors[actor.activity as keyof typeof statusColors]} dot>
                           {actor.activity}
                         </Badge>
                       </div>
@@ -385,10 +381,10 @@ export default function ThreatIntelligencePage() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-mono text-gray-500">{campaign.id}</span>
-                        <Badge variant={statusColors[campaign.status as keyof typeof statusColors] as any}>
+                        <Badge variant={statusColors[campaign.status as keyof typeof statusColors]}>
                           {campaign.status}
                         </Badge>
-                        <Badge variant={severityColors[campaign.severity as keyof typeof severityColors] as any}>
+                        <Badge variant={severityColors[campaign.severity as keyof typeof severityColors]}>
                           {campaign.severity}
                         </Badge>
                       </div>
@@ -443,7 +439,7 @@ export default function ThreatIntelligencePage() {
                   className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/50 p-4"
                 >
                   <div className="flex items-center gap-4">
-                    <Badge variant={severityColors[ioc.severity as keyof typeof severityColors] as any}>
+                    <Badge variant={severityColors[ioc.severity as keyof typeof severityColors]}>
                       {ioc.severity}
                     </Badge>
                     <div>
