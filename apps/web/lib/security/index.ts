@@ -491,7 +491,7 @@ export function generateRequestFingerprint(request: NextRequest): string {
     request.headers.get('user-agent') || '',
     request.headers.get('accept-language') || '',
     request.headers.get('accept-encoding') || '',
-    request.ip || '',
+    request.headers.get('x-forwarded-for') || '',
   ];
 
   return components.join('|');

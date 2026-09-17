@@ -132,7 +132,7 @@ const nextConfig = {
   // ============================================================================
   // Webpack Configuration
   // ============================================================================
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     // Optimize bundle size
     config.resolve.fallback = {
       ...config.resolve.fallback,

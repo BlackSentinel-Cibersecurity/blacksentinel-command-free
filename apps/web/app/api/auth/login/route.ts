@@ -18,7 +18,7 @@ import { sanitizeInput, checkRateLimit, createSecureResponse, createErrorRespons
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
     const rateLimitResult = checkRateLimit(`login:${ip}`, {
       windowMs: 900000, // 15 minutes
       maxRequests: 10, // 10 attempts per 15 minutes

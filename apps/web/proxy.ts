@@ -77,7 +77,7 @@ const cspDirectives = [
 // Middleware Function
 // ============================================================================
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
   // Add security headers
@@ -96,7 +96,11 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Timestamp', new Date().toISOString());
 
   // Rate limiting check (simplified - in production use Redis)
-  const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  // NextRequest.ip was removed in Next.js 15; the deploy platform's
+  // forwarded-for header is now the only source for the client IP.
+  // _ip is captured for the eventual Redis-backed rate limiter but unused
+  // by this simplified check (pre-existing, not part of the Next.js upgrade).
+  const _ip = request.headers.get('x-forwarded-for') || 'unknown';
   const path = request.nextUrl.pathname;
 
   // Block suspicious paths
