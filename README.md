@@ -3,7 +3,7 @@
 > **This is the free, limited edition.** `/ai`, `/automation`,
 > `/marketplace`, and `/analytics` are **not included in this
 > repository's source at all** (not just gated behind a flag) — see
-> blacksentinel.io for the full platform.
+> blacksentinel.tech for the full platform.
 >
 > Note found while preparing this split: this monorepo has a number of
 > pre-existing issues unrelated to the split itself — a nonexistent
@@ -258,7 +258,7 @@ Extension ecosystem:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/blacksentinel-command.git
+git clone https://github.com/BlackSentinel-Cibersecurity/blacksentinel-command-free.git
 
 # Install dependencies
 npm install
@@ -386,158 +386,6 @@ docker-compose up -d
 
 ---
 
-## Pricing & Licensing
-
-### Pricing Tiers
-
-| Tier | Base Price | Per User | Max Users | Use Case |
-|------|------------|----------|-----------|----------|
-| **Starter** | $499/mo | $49/user | 10 | Small security teams |
-| **Professional** | $1,999/mo | $39/user | 50 | Growing organizations |
-| **Enterprise** | $9,999/mo | $29/user | 500 | Large enterprises |
-| **Government** | $49,999/mo | $99/user | 10,000 | Government & defense |
-
-### Pricing Calculator Examples
-
-| Scenario | Users | Assets | Monthly Cost |
-|----------|-------|--------|--------------|
-| Small Business | 5 | 500 | $574 |
-| Mid-Market | 30 | 3,000 | $3,439 |
-| Enterprise | 200 | 20,000 | $16,999 |
-| Government | 1,000 | 100,000 | $169,999 |
-
-### Licensing Options
-
-1. **Subscription License** - Monthly/Annual billing (Most Popular)
-2. **Perpetual License** - One-time purchase + maintenance
-3. **Trial License** - 30-day free trial
-4. **NFR License** - For partners and resellers
-5. **OEM License** - White-label for integrators
-
-### Volume Discounts
-
-| Commitment | Discount |
-|------------|----------|
-| 1 year | 10% |
-| 2 years | 15% |
-| 3 years | 20% |
-
----
-
-## Delivery Models for Organizations
-
-### Option 1: SaaS (Software as a Service)
-
-**Best for:** Organizations wanting minimal infrastructure management
-
-- Hosted by BlackSentinel
-- 99.99% uptime SLA
-- Automatic updates
-- 24/7 support
-- **Pricing:** Subscription per user/asset
-
-### Option 2: Managed Service
-
-**Best for:** Organizations wanting control without infrastructure burden
-
-- Deployed in customer's cloud
-- BlackSentinel manages operations
-- Custom configurations
-- Dedicated support
-- **Pricing:** Management fee + usage
-
-### Option 3: Self-Hosted
-
-**Best for:** Organizations requiring full control
-
-- Deployed on customer's infrastructure
-- Customer manages operations
-- Full customization
-- Training and documentation
-- **Pricing:** License + support contract
-
-### Option 4: Air-Gapped
-
-**Best for:** Government and defense organizations
-
-- No internet connection required
-- Manual updates via secure media
-- Complete isolation
-- On-site support
-- **Pricing:** Premium license + on-site support
-
----
-
-## Implementation Services
-
-### Standard Implementation
-- Duration: 2-4 weeks
-- Includes: Installation, configuration, training
-- **Price:** $25,000
-
-### Enterprise Implementation
-- Duration: 4-8 weeks
-- Includes: Custom integration, custom dashboards, advanced training
-- **Price:** $75,000
-
-### Government Implementation
-- Duration: 8-12 weeks
-- Includes: Compliance setup, security hardening, on-site training
-- **Price:** $150,000
-
----
-
-## Support Plans
-
-### Basic Support
-- Email support (24h response)
-- Documentation access
-- Community forum
-- **Included:** All tiers
-
-### Standard Support
-- Chat + Email (4h response)
-- Phone support (business hours)
-- Priority bug fixes
-- **Included:** Professional tier
-
-### Premium Support
-- 24/7 phone support (1h response)
-- Dedicated account manager
-- Custom development
-- **Included:** Enterprise tier
-
-### Enterprise Support
-- 24/7 phone support (15min response)
-- Dedicated support team
-- On-site support
-- Custom SLA
-- **Included:** Government tier
-
----
-
-## Partner Programs
-
-### Reseller Program
-- Earn 20-30% margin
-- Sales enablement
-- Marketing support
-- **Requirements:** $100K annual commitment
-
-### Technology Partners
-- Integration marketplace
-- Co-marketing
-- Technical support
-- **Requirements:** Certified integration
-
-### Consulting Partners
-- Implementation services
-- Training certification
-- Lead referral
-- **Requirements:** Certified consultants
-
----
-
 ## Roadmap
 
 ### Phase 1 (Current - v1.0)
@@ -575,27 +423,19 @@ docker-compose up -d
 
 ---
 
-## License
+## Before you run it
 
-Proprietary - BlackSentinel Security Inc.
-
-See [LICENSE.md](LICENSE.md) for details.
-
----
+- This is a **technical preview** and the open-source edition of the product. It comes with no warranty and no service-level commitment: try it in a test environment first.
+- It is **self-hosted**. BlackSentinel does not host it for you, and paid plans are not on sale.
+- Change every default credential and secret before exposing anything to a network. Never deploy with the example values from `.env.example` or `.env.production`.
+- Use it only on systems you own or are explicitly authorized to test or monitor. See the [Acceptable Use Policy](https://blacksentinel.tech/acceptable-use/).
 
 ## Support
 
-- **Documentation:** https://docs.blacksentinel.io
-- **Email:** support@blacksentinel.io
-- **Phone:** +1-800-BLACK-911
-- **Slack:** #command-support
-- **Emergency:** +1-800-BLACK-911
+- Bugs and questions: [open an issue](https://github.com/BlackSentinel-Cibersecurity/blacksentinel-command-free/issues) in this repository.
+- Security reports: follow [security.txt](https://blacksentinel.tech/.well-known/security.txt). Please do not open a public issue for a vulnerability.
+- Everything else: BlackSentinel-tech@protonmail.com
 
----
+## License
 
-## Sales
-
-- **Email:** sales@blacksentinel.io
-- **Phone:** +57-315-BLACK-SALES
-- **Web:** https://blacksentinel.io/contact
-- **Free Trial:** https://blacksentinel.io/trial
+MIT. See [LICENSE](LICENSE). The BlackSentinel name and logo are not covered by the licence.
