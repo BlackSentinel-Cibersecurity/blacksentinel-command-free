@@ -168,7 +168,9 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            # {{branch}} is empty on pull_request events, which produced the
+            # invalid tag ":-<sha>" and failed every PR build.
+            type=sha,prefix=sha-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
