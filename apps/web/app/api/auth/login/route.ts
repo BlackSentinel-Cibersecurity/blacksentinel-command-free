@@ -60,18 +60,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production: Fetch user from database
-    // const user = await db.users.findByEmail(sanitizedEmail);
-    const user = {
-      id: 'user-1',
-      email: sanitizedEmail,
-      name: 'John Doe',
-      passwordHash: await hashPassword('SecureP@ssw0rd!'),
-      role: 'ciso' as const,
-      organizationId: 'org-1',
-      mfaEnabled: true,
-      mfaVerified: false,
-    };
+    // SECURITY FIX: this used to accept ANY email with the published password
+    // 'SecureP@ssw0rd!' and grant the CISO role. The free edition has a single
+    // operator account, configured in .env (scripts/init-env.sh creates it).
+    const adminEmail = (process.env.ADMIN_EMAIL || 'admin@blacksentinel.local').trim().toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+    if (!adminPassword || adminPassword.length < 12) {
+      return createErrorResponse(
+        'Sign-in is not configured. Set ADMIN_PASSWORD (12+ characters) in .env; scripts/init-env.sh creates one.',
+        503
+      );
+    }
+    const user =
+      sanitizedEmail === adminEmail
+        ? {
+            id: 'admin',
+            email: adminEmail,
+            name: 'Administrator',
+            passwordHash: await hashPassword(adminPassword),
+            role: 'ciso' as const,
+            organizationId: 'org-1',
+            // TOTP is not implemented in the free edition, so MFA stays off
+            // rather than pretending to check a code.
+            mfaEnabled: false,
+            mfaVerified: false,
+          }
+        : null;
 
     if (!user) {
       await recordLoginAttempt(sanitizedEmail, false);
@@ -118,9 +132,9 @@ export async function POST(request: NextRequest) {
 
     // Verify MFA if provided
     if (user.mfaEnabled && mfaCode) {
-      // In production: Verify TOTP code
-      // const mfaValid = await verifyTOTP(user.mfaSecret, mfaCode);
-      const mfaValid = true; // Placeholder
+      // TOTP is not implemented in the free edition: fail closed instead of the
+      // old placeholder that accepted every code.
+      const mfaValid = false;
 
       if (!mfaValid) {
         await logAuditEvent({
