@@ -122,8 +122,13 @@ jobs:
         with:
           args: --all-projects
 
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+      # What ships (the runtime dependencies) must have no high or critical
+      # advisories. Dev tooling (jest, CSS build) never reaches the image, so
+      # it only blocks on critical; its lower findings stay visible in the log.
+      - name: Run npm audit (runtime dependencies)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Run npm audit (dev tooling, critical only)
+        run: npm audit --audit-level=critical
 
       - name: Check for secrets
         uses: trufflesecurity/trufflehog@main
@@ -163,7 +168,9 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            # {{branch}} is empty on pull_request events, which produced the
+            # invalid tag ":-<sha>" and failed every PR build.
+            type=sha,prefix=sha-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

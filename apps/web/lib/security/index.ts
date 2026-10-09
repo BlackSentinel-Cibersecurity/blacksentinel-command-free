@@ -301,15 +301,24 @@ export function validateRequest(
 // Data Encryption
 // ============================================================================
 
-const ENCRYPTION_KEY = new TextEncoder().encode(
-  process.env.ENCRYPTION_KEY || 'default-encryption-key-change-in-production'
-);
+// AES-256-GCM needs exactly 32 key bytes; the old default string was 43 bytes,
+// so importKey threw. The key is now SHA-256(ENCRYPTION_KEY). Without a real
+// ENCRYPTION_KEY there is no built-in one: encryption refuses to run.
+let encryptionKey: Promise<ArrayBuffer> | null = null;
+function getEncryptionKey(): Promise<ArrayBuffer> {
+  const material = process.env.ENCRYPTION_KEY?.trim();
+  if (!material || material.length < 32 || /change|your[-_]|example|placeholder|default|dev[-_]|development/i.test(material)) {
+    return Promise.reject(new Error('ENCRYPTION_KEY is not set. Run scripts/init-env.sh to create one.'));
+  }
+  encryptionKey ??= crypto.subtle.digest('SHA-256', new TextEncoder().encode(material));
+  return encryptionKey;
+}
 
 export async function encryptData(data: string): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const key = await crypto.subtle.importKey(
     'raw',
-    ENCRYPTION_KEY,
+    await getEncryptionKey(),
     { name: 'AES-GCM' },
     false,
     ['encrypt']
@@ -336,7 +345,7 @@ export async function decryptData(encryptedData: string): Promise<string> {
 
   const key = await crypto.subtle.importKey(
     'raw',
-    ENCRYPTION_KEY,
+    await getEncryptionKey(),
     { name: 'AES-GCM' },
     false,
     ['decrypt']
