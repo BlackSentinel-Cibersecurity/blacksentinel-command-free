@@ -53,13 +53,21 @@ export interface MFAChallenge {
 // Configuration
 // ============================================================================
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-change-in-production'
-);
+// SECURITY FIX: both secrets used to fall back to strings written here, so an
+// install without JWT_SECRET accepted session tokens anyone could sign. Without
+// a real secret (32+ characters) each server process now uses a random one;
+// sessions end on restart. Run scripts/init-env.sh to keep them in .env.
+function signingSecret(name: string): Uint8Array {
+  const value = process.env[name]?.trim();
+  if (value && value.length >= 32 && !/change|your[-_]|example|placeholder|fallback|dev[-_]|development/i.test(value)) {
+    return new TextEncoder().encode(value);
+  }
+  console.warn(`[security] ${name} is ${value ? 'too short or a placeholder' : 'not set'}; using a random secret for this process.`);
+  return crypto.getRandomValues(new Uint8Array(32));
+}
 
-const JWT_REFRESH_SECRET = new TextEncoder().encode(
-  process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret-change-in-production'
-);
+const JWT_SECRET = signingSecret('JWT_SECRET');
+const JWT_REFRESH_SECRET = signingSecret('JWT_REFRESH_SECRET');
 
 const SESSION_COOKIE = 'bs-session';
 const REFRESH_COOKIE = 'bs-refresh';
