@@ -51,15 +51,15 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'table'
           severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+          # Report to the job log. SARIF upload to the code-scanning API is
+          # omitted because this org uses CodeQL default setup, which owns code
+          # scanning and rejects third-party SARIF uploads ("Resource not
+          # accessible by integration"). Non-gating for now (exit-code 0);
+          # flip to '1' to fail the build on CRITICAL/HIGH once the backlog is
+          # triaged. Dependency CVEs are also tracked by Dependabot.
+          exit-code: '0'
 
   # ============================================================================
   # Unit & Integration Tests
