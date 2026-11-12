@@ -4,15 +4,6 @@
 > `/marketplace`, and `/analytics` are **not included in this
 > repository's source at all** (not just gated behind a flag) — see
 > blacksentinel.tech for the full platform.
->
-> Note found while preparing this split: this monorepo has a number of
-> pre-existing issues unrelated to the split itself — a nonexistent
-> `@radix-ui/react-badge` dependency that blocked `npm install` entirely
-> (fixed here and in the paid repo), a malformed root `tsconfig.json`
-> (`"extends": "next"`), and multiple type errors in files this split
-> never touched (`packages/types/*`, `packages/graph-engine`, some
-> `apps/web` pages). Worth a dedicated pass — this PR/commit doesn't fix
-> those.
 
 ## The Operating System for Enterprise Cybersecurity
 
